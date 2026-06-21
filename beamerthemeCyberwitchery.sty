@@ -1,0 +1,440 @@
+% beamerthemeCyberwitchery.sty
+% Cyberwitchery beamer theme — dark (default) or light.
+% Translated from the Cyberwitchery web language: near-black ground, JetBrains Mono
+% titles, Hanken Grotesk prose, hairline rules, one inverted "chip" accent,
+% plus teal/magenta data accents for graphs.
+%
+% Best compiled with XeLaTeX or LuaLaTeX (real fonts via fontspec).
+% pdfLaTeX also compiles, falling back to Inconsolata for the mono face.
+%
+%   \usetheme{Cyberwitchery}          % dark
+%   \usetheme[light]{Cyberwitchery}   % light
+%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemeCyberwitchery}[2026/06/20 v1.0 Cyberwitchery]
+
+\mode<presentation>
+
+% ----------------------------------------------------------------------------
+% Options : light / dark
+% ----------------------------------------------------------------------------
+\newif\ifcw@light \cw@lightfalse
+\DeclareOption{dark}{\cw@lightfalse}
+\DeclareOption{light}{\cw@lighttrue}
+\ProcessOptions\relax
+
+\RequirePackage{iftex}
+\RequirePackage{tikz}
+
+% ----------------------------------------------------------------------------
+% Palette
+% ----------------------------------------------------------------------------
+\ifcw@light
+  \definecolor{cwGround}{HTML}{F5F5F5}
+  \definecolor{cwInk}{HTML}{0B0B0B}
+  \definecolor{cwBody}{HTML}{1B1B1B}
+  \definecolor{cwMuted}{HTML}{555555}
+  \definecolor{cwFaint}{HTML}{8F8F8F}
+  \definecolor{cwPipe}{HTML}{9F9F9F}
+  \definecolor{cwPanel}{HTML}{ECECEC}
+  \definecolor{cwPanelFaint}{HTML}{F0F0F0}
+  \definecolor{cwChip}{HTML}{171717}
+  \definecolor{cwChipText}{HTML}{F5F5F5}
+  \definecolor{cwRule}{HTML}{DCDCDC}
+  \definecolor{cwGhost}{HTML}{D9D9D9}
+  \definecolor{cwTeal}{HTML}{00898B}
+  \definecolor{cwMagenta}{HTML}{B22578}
+\else
+  \definecolor{cwGround}{HTML}{0A0A0A}
+  \definecolor{cwInk}{HTML}{F4F4F4}
+  \definecolor{cwBody}{HTML}{E4E4E4}
+  \definecolor{cwMuted}{HTML}{AAAAAA}
+  \definecolor{cwFaint}{HTML}{707070}
+  \definecolor{cwPipe}{HTML}{606060}
+  \definecolor{cwPanel}{HTML}{1A1A1A}
+  \definecolor{cwPanelFaint}{HTML}{121212}
+  \definecolor{cwChip}{HTML}{E8E8E8}
+  \definecolor{cwChipText}{HTML}{0A0A0A}
+  \definecolor{cwRule}{HTML}{262626}
+  \definecolor{cwGhost}{HTML}{262626}
+  \definecolor{cwTeal}{HTML}{0CC3C3}
+  \definecolor{cwMagenta}{HTML}{E670AC}
+\fi
+
+% Convenience aliases for document authors / pgfplots
+\colorlet{cwaccent}{cwTeal}
+\colorlet{cwaccentb}{cwMagenta}
+
+% ----------------------------------------------------------------------------
+% Fonts
+% ----------------------------------------------------------------------------
+% \cwhanken : prose face (Hanken Grotesk).  \prose{...} : prose run.
+\ifPDFTeX
+  \RequirePackage[T1]{fontenc}
+  \RequirePackage{inconsolata}          % JetBrains Mono substitute
+  \renewcommand{\familydefault}{\ttdefault}
+  \newcommand{\cwhanken}{\normalfont}   % no Hanken under pdfLaTeX; prose stays upright
+\else
+  \RequirePackage{fontspec}
+  % Pin the bold face to JetBrains Mono Bold (700).  Loading the family by name
+  % lets fontspec's auto-detection pick ExtraBold (~800) for \bfseries, which
+  % reads too heavy; loading the discrete static files by path forces 700.
+  % If the static files aren't present (another machine), fall back to name-based
+  % loading so the theme still compiles -- the bold will just be heavier.
+  \def\cw@fontdir{/Users/veitheller/Library/Fonts/}
+  \IfFileExists{\cw@fontdir JetBrainsMono-Bold.ttf}{%
+    \setsansfont{JetBrainsMono-}[Path=\cw@fontdir,Extension=.ttf,
+      UprightFont=*Regular,BoldFont=*Bold,Numbers=Monospaced]%
+    \setmonofont{JetBrainsMono-}[Path=\cw@fontdir,Extension=.ttf,
+      UprightFont=*Regular,BoldFont=*Bold]%
+  }{%
+    \setsansfont{JetBrains Mono}[Numbers=Monospaced]%
+    \setmonofont{JetBrains Mono}%
+  }
+  \newfontfamily\cwhanken{Hanken Grotesk}
+  \renewcommand{\familydefault}{\sfdefault}
+\fi
+\newcommand{\prose}[1]{{\cwhanken #1}}
+
+\setbeamerfont{title}{series=\bfseries,size=\Huge}
+\setbeamerfont{subtitle}{size=\large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+\setbeamerfont{footline}{size=\fontsize{7.5}{9}\selectfont}
+\setbeamerfont{cwkicker}{size=\small}
+\setbeamerfont{block title}{series=\bfseries,size=\small}
+
+% ----------------------------------------------------------------------------
+% Color assignments
+% ----------------------------------------------------------------------------
+\setbeamercolor{background canvas}{bg=cwGround}
+\setbeamercolor{normal text}{fg=cwBody,bg=cwGround}
+\setbeamercolor{structure}{fg=cwInk}
+\setbeamercolor{alerted text}{fg=cwTeal}
+\setbeamercolor{title}{fg=cwInk}
+\setbeamercolor{subtitle}{fg=cwMuted}
+\setbeamercolor{author}{fg=cwBody}
+\setbeamercolor{institute}{fg=cwFaint}
+\setbeamercolor{date}{fg=cwFaint}
+\setbeamercolor{frametitle}{fg=cwInk,bg=cwGround}
+\setbeamercolor{itemize item}{fg=cwPipe}
+\setbeamercolor{itemize subitem}{fg=cwPipe}
+\setbeamercolor{itemize subsubitem}{fg=cwPipe}
+\setbeamercolor{enumerate item}{fg=cwFaint}
+\setbeamercolor{footline}{fg=cwFaint,bg=cwGround}
+\setbeamercolor{block title}{fg=cwInk,bg=cwPanel}
+\setbeamercolor{block body}{fg=cwMuted,bg=cwGround}
+\setbeamercolor{block title alerted}{fg=cwChipText,bg=cwChip}
+\setbeamercolor{block body alerted}{fg=cwBody,bg=cwGround}
+\setbeamercolor{block title example}{fg=cwMuted,bg=cwPanelFaint}
+\setbeamercolor{block body example}{fg=cwFaint,bg=cwGround}
+
+% airy margins like the mockup
+\setbeamersize{text margin left=0.06\paperwidth,text margin right=0.06\paperwidth}
+
+% ----------------------------------------------------------------------------
+% No navigation glyphs; pipe itemize markers
+% ----------------------------------------------------------------------------
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\color{cwPipe}\textbar}
+\setbeamertemplate{itemize subitem}{\color{cwPipe}\textbar}
+\setbeamertemplate{itemize subsubitem}{\color{cwPipe}\textbar}
+
+% ----------------------------------------------------------------------------
+% Frametitle  (title + hairline rule)
+% ----------------------------------------------------------------------------
+\setbeamertemplate{frametitle}{%
+  \vskip1.4ex%
+  \begin{beamercolorbox}[wd=\textwidth]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle\par%
+    \vskip4pt%
+    {\color{cwRule}\hrule height0.6pt}%
+  \end{beamercolorbox}%
+  \vskip1.2ex%
+}
+
+% ----------------------------------------------------------------------------
+% Footline  :  left  |  running title  |  NN / total
+% ----------------------------------------------------------------------------
+\newcommand{\cwfootleft}{cyber witchery}
+\setbeamertemplate{footline}{%
+  \hbox{%
+    \begin{beamercolorbox}[wd=\paperwidth,sep=0pt]{footline}%
+      \hskip0.06\paperwidth%
+      \vbox to 0pt{\vss{\color{cwRule}\hrule height0.6pt width0.88\paperwidth}\vskip5pt}%
+    \end{beamercolorbox}%
+  }%
+  \vskip4pt%
+  \hbox to \paperwidth{%
+    \hskip0.06\paperwidth%
+    \usebeamerfont{footline}\usebeamercolor[fg]{footline}%
+    \cwfootleft\hfill\insertshorttitle\hfill%
+    \insertframenumber\,/\,\inserttotalframenumber%
+    \hskip0.06\paperwidth%
+  }%
+  \vskip6pt%
+}
+
+% ----------------------------------------------------------------------------
+% Blocks  (filled title bar + body; alert bar uses the chip)
+% ----------------------------------------------------------------------------
+% Each block is a real hairline-framed rectangle: title + body are captured in an
+% lrbox and drawn inside an \fbox (rule = frame colour).  The title bar fills the
+% width; a \cw@bd rule divides it from the body.
+\newsavebox{\cw@bb}
+\newlength{\cw@bd}\setlength{\cw@bd}{0.6pt}
+\newcommand{\cw@blkbegin}[2]{% #1 title beamercolor  #2 body beamercolor
+  \par\vskip6pt%
+  \begin{lrbox}{\cw@bb}%
+  \begin{minipage}{\dimexpr\textwidth-2\cw@bd\relax}%
+    \begin{beamercolorbox}[wd=\linewidth,sep=7pt,leftskip=8pt,rightskip=8pt]{#1}%
+      \usebeamerfont{block title}\insertblocktitle%
+    \end{beamercolorbox}%
+    {\color{cwRule}\hrule height\cw@bd}%
+    \begin{beamercolorbox}[wd=\linewidth,sep=9pt,leftskip=8pt,rightskip=8pt]{#2}%
+      \cwhanken%
+}
+\newcommand{\cw@blkend}[1]{% #1 frame colour
+    \end{beamercolorbox}%
+  \end{minipage}%
+  \end{lrbox}%
+  {\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{\cw@bd}%
+   \noindent\textcolor{#1}{\fbox{\usebox\cw@bb}}}%
+  \vskip8pt%
+}
+
+\setbeamertemplate{block begin}{\cw@blkbegin{block title}{block body}}
+\setbeamertemplate{block end}{\cw@blkend{cwRule}}
+\setbeamertemplate{block alerted begin}{\cw@blkbegin{block title alerted}{block body alerted}}
+\setbeamertemplate{block alerted end}{\cw@blkend{cwChip}}
+\setbeamertemplate{block example begin}{\cw@blkbegin{block title example}{block body example}}
+\setbeamertemplate{block example end}{\cw@blkend{cwRule}}
+
+% ----------------------------------------------------------------------------
+% Title page
+% ----------------------------------------------------------------------------
+\newcommand{\cwkicker}{a cyber witchery talk}
+\setbeamertemplate{title page}{%
+  \vskip0.12\paperheight%
+  {\usebeamerfont{cwkicker}\color{cwFaint}\cwkicker\par}%
+  \vskip0.05\paperheight%
+  {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}%
+  \ifx\insertsubtitle\empty\else
+    \vskip12pt{\cwhanken\color{cwMuted}\large\insertsubtitle\par}%
+  \fi
+  \vskip0.12\paperheight%
+  {\color{cwRule}\hrule height0.6pt}\vskip10pt%
+  \hbox to \textwidth{%
+    {\color{cwBody}\insertauthor}\hfill{\color{cwFaint}\insertdate}%
+  }\par
+  \vskip3pt{\color{cwFaint}\small\insertinstitute\par}%
+}
+
+% ----------------------------------------------------------------------------
+% Section page  (ghost numeral + name + tick rule)
+% ----------------------------------------------------------------------------
+% zero-padded section number : 1 -> 01
+\newcommand{\cwsectionno}{\ifnum\value{section}<10 0\fi\arabic{section}}
+\setbeamertemplate{section page}{%
+  % faint ghost mark, top-right, kept clear of the numeral and kicker
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north east]
+      at ([shift={(-0.06\paperwidth,-0.10\paperheight)}]current page.north east)
+      {\cwlogo[cwRule]{0.11\paperheight}};
+  \end{tikzpicture}%
+  \vfill
+  {\color{cwFaint}\small section \cwsectionno\par}%
+  \vskip10pt%
+  \hbox{%
+    {\fontsize{110}{110}\selectfont\bfseries\color{cwGhost}\cwsectionno}%
+    \hskip22pt%
+    % \parbox[b] bottom-aligns the title's last baseline to the numeral baseline
+    \parbox[b]{0.6\textwidth}{\raggedright\bfseries\color{cwInk}%
+      \fontsize{28}{32}\selectfont\insertsection}%
+  }%
+  \vfill
+  \hbox to \textwidth{%
+    {\color{cwChip}\rule{0.22\textwidth}{2pt}}\hskip4pt%
+    {\color{cwRule}\rule{0.22\textwidth}{2pt}}\hskip4pt%
+    {\color{cwRule}\rule{0.22\textwidth}{2pt}}\hskip4pt%
+    {\color{cwRule}\rule{0.22\textwidth}{2pt}}%
+  }%
+  \vskip0.04\paperheight%
+}
+\AtBeginSection[]{%
+  \begin{frame}[plain,noframenumbering]
+  \sectionpage
+  \end{frame}%
+}
+
+% ----------------------------------------------------------------------------
+% Big-number helper :  \cwstat{120+}{production fabrics ...}
+% ----------------------------------------------------------------------------
+\newcommand{\cwstat}[2]{%
+  \hbox{%
+    {\fontsize{84}{84}\selectfont\bfseries\color{cwInk}#1}%
+    \hskip20pt%
+    \vtop{\hsize0.32\textwidth\cwhanken\color{cwMuted}\large #2}%
+  }%
+}
+
+% ----------------------------------------------------------------------------
+% Logo mark :  \cwlogo[colour]{width}  (default colour cwInk).  Drawn natively
+% so it is transparent, recolourable and palette-aware -- use cwGhost/cwRule for
+% a faint ghost, cwInk for a visible mark.  Geometry mirrors images/cwl.svg.
+% ----------------------------------------------------------------------------
+\newlength{\cw@lu}\newlength{\cw@llw}
+\newcommand{\cwlogo}[2][cwInk]{%
+  \setlength{\cw@lu}{\dimexpr#2/256\relax}%
+  \setlength{\cw@llw}{\dimexpr#2/16\relax}%
+  \begin{tikzpicture}[x=\cw@lu,y=\cw@lu,line width=\cw@llw,
+      line cap=rect,line join=miter,baseline={(current bounding box.center)}]
+    \draw[#1] (128,24)--(160,56)--(128,88)--(96,56)--cycle;
+    \draw[#1] (128,168)--(160,200)--(128,232)--(96,200)--cycle;
+    \draw[#1] (128,88)--(128,168);
+    \draw[#1] (44,128)--(212,128);
+  \end{tikzpicture}%
+}
+
+% ----------------------------------------------------------------------------
+% Toolkit : packages + styles backing the content patterns
+% ----------------------------------------------------------------------------
+\RequirePackage{pgfplots}
+\RequirePackage{listings}
+\RequirePackage{colortbl}   % \columncolor / \arrayrulecolor (pulls in array)
+\RequirePackage{booktabs}
+\usetikzlibrary{positioning, arrows.meta}
+\pgfplotsset{compat=1.16}
+
+% code listings styled to the theme  (add keywords per deck with \lstset)
+\lstdefinestyle{cw}{
+  basicstyle=\ttfamily\small\color{cwBody},
+  backgroundcolor=\color{cwPanelFaint},
+  keywordstyle=\color{cwInk}\bfseries,
+  commentstyle=\color{cwFaint},
+  stringstyle=\color{cwMuted},
+  showstringspaces=false,
+  frame=single, rulecolor=\color{cwRule},
+  framesep=8pt, xleftmargin=10pt, xrightmargin=10pt,
+  morecomment=[l]{\#},
+}
+\lstset{style=cw}
+
+% pgfplots : numbers stay in JetBrains Mono (assume math mode + \sffamily), and
+% the two accents.  Use [cw bar] / [cw line] on an axis; supply data in the deck.
+\pgfplotsset{
+  cw common/.style={
+    width=0.86\textwidth, height=0.52\textheight, clip=false,
+    every tick label/.append style={font=\sffamily\footnotesize, color=cwFaint,
+      /pgf/number format/assume math mode=true},
+    every node near coord/.append style={font=\sffamily\footnotesize, color=cwFaint,
+      /pgf/number format/assume math mode=true},
+    label style={font=\sffamily\footnotesize, color=cwFaint},
+  },
+  cw line/.style={
+    cw common,
+    axis lines=left,
+    axis line style={draw=cwRule, line width=0.6pt, -},
+    tick style={draw=cwRule},
+    axis y line=none, ytick=\empty,
+    enlarge x limits=0.02, enlarge y limits=0.08,
+    legend style={at={(0,1.02)}, anchor=south west, draw=none, fill=none,
+      font=\sffamily\footnotesize, text=cwBody, legend columns=-1,
+      /tikz/every even column/.append style={column sep=16pt}},
+    legend image post style={line width=1.4pt},
+  },
+  cw bar/.style={
+    cw common,
+    ybar, bar width=26pt, ymin=0,
+    axis x line=bottom, axis y line=none,
+    x axis line style={draw=none}, x tick style={draw=none},
+    ytick=\empty, enlarge x limits=0.10,
+    nodes near coords,
+  },
+}
+
+% ----------------------------------------------------------------------------
+% Content-pattern macros  (the swatchbook patterns, reusable across decks)
+% ----------------------------------------------------------------------------
+% hairline-bordered padded panel : \cwpanel[width]{body}
+\newcommand{\cwpanel}[2][\linewidth]{%
+  {\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.6pt}\color{cwRule}%
+   \fbox{\begin{minipage}{\dimexpr#1-2\fboxrule\relax}#2\end{minipage}}}}
+
+% one labelled "in / map / out" row for use inside \cwpanel
+\newcommand{\cwmaprow}[2]{%
+  \vskip9pt\hskip12pt{\color{cwFaint}\makebox[2.4em][l]{#1}}#2\par\vskip9pt}
+
+% three-up big-stat row with hairline separators
+\newcommand{\cwministat}[2]{%
+  \parbox[t]{0.30\textwidth}{{\Large\bfseries\color{cwInk}#1}\\[4pt]%
+    \prose{\small\color{cwFaint}#2}}}
+\newcommand{\cwstatrow}[6]{%
+  \hbox to \textwidth{%
+    \cwministat{#1}{#2}\hfill{\color{cwRule}\vrule width0.6pt height42pt}\hfill
+    \cwministat{#3}{#4}\hfill{\color{cwRule}\vrule width0.6pt height42pt}\hfill
+    \cwministat{#5}{#6}}}
+
+% timeline milestone : x / date / title / description / dot fill colour
+\newcommand{\cwmile}[5]{%
+  \fill[#5] (#1,0) circle (3.2pt);
+  \draw[cwRule, line width=0.6pt] (#1,0) circle (3.2pt);
+  \node[anchor=south west, text=cwFaint, font=\sffamily\scriptsize]
+    at (#1,0.16) {#2};
+  \node[anchor=north west, text=cwInk, font=\sffamily\bfseries\small,
+    text width=2.7cm, align=left] at (#1,-0.18) {#3};
+  \node[anchor=north west, text=cwFaint, font=\sffamily\scriptsize,
+    text width=2.7cm, align=left] at (#1,-1.0) {#4};}
+% timeline wrapper : \cwtimeline{rightmost x}{ <\cwmile calls> }
+\newcommand{\cwtimeline}[2]{%
+  \centering
+  \begin{tikzpicture}
+    \draw[cwRule, line width=0.6pt] (-0.25,0) -- ({#1+0.25},0);
+    #2
+  \end{tikzpicture}}
+
+% logo-wall cell : \cwlogocell[width]{content}  (content is a \includegraphics or text)
+\newcommand{\cwlogocell}[2][0.205\textwidth]{%
+  {\setlength{\fboxsep}{0pt}\color{cwRule}\fbox{%
+    \makebox[#1][c]{\rule{0pt}{1.5cm}\color{cwFaint}\sffamily\small #2}}}}
+
+% three-node flow diagram : \cwflow{left}{centre}{centre-subtitle}{right}
+\newcommand{\cwflow}[4]{%
+  \centering
+  \begin{tikzpicture}[box/.style={draw=cwRule, line width=0.6pt, text=cwBody,
+      font=\sffamily, minimum width=2.7cm, minimum height=1.2cm, align=center,
+      inner sep=6pt}]
+    \node[box] (a) {#1};
+    \node[box, right=2.2cm of a, draw=cwInk] (b)
+      {{\color{cwInk}\bfseries #2}\\[2pt]{\scriptsize\color{cwFaint}#3}};
+    \node[box, right=2.2cm of b] (c) {#4};
+    \draw[cwRule, line width=0.6pt, -{Stealth[length=5pt]}] (a) -- (b);
+    \draw[cwRule, line width=0.6pt, -{Stealth[length=5pt]}] (b) -- (c);
+  \end{tikzpicture}}
+
+% framed, aspect-fit screenshot : \cwshot[width]{chrome label}{content}
+\newcommand{\cwshot}[3][0.8\textwidth]{%
+  \cwpanel[#1]{\color{cwFaint}\sffamily\footnotesize
+    \vskip8pt\hskip10pt$\circ$ $\circ$ $\circ$\hskip12pt #2\par
+    {\color{cwRule}\hrule height0.6pt}%
+    #3}}
+
+% full-bleed photo (call inside a [plain] frame) : \cwphoto{centre}{title}{desc}
+% swap the \fill for a \node{\includegraphics...} to drop in a real image
+\newcommand{\cwphoto}[3]{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[cwPanel] (current page.south west) rectangle (current page.north east);
+    \node[text=cwFaint, font=\sffamily] at (current page.center) {#1};
+    \node[anchor=south west, align=left]
+      at ([shift={(0.06\paperwidth,0.08\paperheight)}]current page.south west)
+      {{\color{cwInk}\sffamily\bfseries\large #2}\\[6pt]%
+       {\color{cwFaint}\sffamily\small #3}};
+  \end{tikzpicture}}
+
+% logo as a right-hand overlay element : \cwlogoright[colour]{width}
+\newcommand{\cwlogoright}[2][cwInk]{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=east] at ([xshift=-0.09\paperwidth]current page.east)
+      {\cwlogo[#1]{#2}};
+  \end{tikzpicture}}
+
+\mode<all>

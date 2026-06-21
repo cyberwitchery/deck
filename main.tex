@@ -1,0 +1,267 @@
+% main.tex — Cyberwitchery beamer theme: swatchbook / example deck.
+% Every visual pattern lives in the theme (beamerthemeCyberwitchery.sty); this
+% file is just content that calls those macros.  It doubles as the looks demo.
+%
+% Compile:  xelatex main.tex   (or lualatex; pdflatex also works with substitute fonts)
+% Switch to light:  \usetheme[light]{Cyberwitchery}
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usetheme{Cyberwitchery}          % <- add [light] for the light variant
+
+\lstset{morekeywords={model,source,fields,apply}}  % keywords for the code slide
+
+% ---- title metadata ----
+\title{network automation,\\end to end}
+\subtitle{from the inventory you already run to a fabric that configures itself.}
+\author{the cyber witchery lab}
+\institute{cyberwitchery gmbh}
+\date{march 2026}
+\renewcommand{\cwfootleft}{cyber witchery}
+
+\begin{document}
+
+% --- title : large faint logo on the right -----------------------------------
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+  \cwlogoright[cwGhost]{0.46\paperheight}%
+  \titlepage
+\end{frame}}
+
+% ============================================================================
+% SECTION 1 — core patterns
+% ============================================================================
+\section{the model is the contract}
+
+% --- itemize -----------------------------------------------------------------
+\begin{frame}{four steps, every time}
+  \begin{itemize}\setlength\itemsep{1.1em}
+    \item describe the shape once\\[2pt]
+      {\prose{\small\color{cwFaint}vendor-neutral, set in one reviewable place.}}
+    \item pull from the systems you already run\\[2pt]
+      {\prose{\small\color{cwFaint}netbox, nautobot, infrahub --- read straight through.}}
+    \item map, then apply\\[2pt]
+      {\prose{\small\color{cwFaint}see the plan before anything is written back.}}
+  \end{itemize}
+\end{frame}
+
+% --- blocks ------------------------------------------------------------------
+\begin{frame}{three kinds of emphasis}
+  \begin{block}{block --- the model is the contract}
+    describe it once; every source bends to fit the same shape.
+  \end{block}
+  \begin{alertblock}{alertblock --- nothing changes by surprise}
+    the plan is shown in full before a single write goes out.
+  \end{alertblock}
+  \begin{exampleblock}{exampleblock --- migrate netbox $\rightarrow$ infrahub}
+    same engine, different endpoints. set the map, run it.
+  \end{exampleblock}
+\end{frame}
+
+% --- two columns + map panel -------------------------------------------------
+\begin{frame}{one shape, many endpoints}
+  \begin{columns}[T]
+    \begin{column}{0.44\textwidth}
+      \begin{itemize}\setlength\itemsep{0.8em}
+        \item inventory is the source of truth
+        \item the fabric is the destination
+        \item alembic is the flow between
+      \end{itemize}
+      \vskip10pt\prose{\small\color{cwFaint}the same system is an input one day and an output the next.}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \cwpanel{\color{cwBody}\small
+        \cwmaprow{in}{netbox}
+        {\color{cwRule}\hrule height0.6pt}%
+        \cwmaprow{map}{device model}
+        {\color{cwRule}\hrule height0.6pt}%
+        \cwmaprow{out}{\color{cwInk}infrahub $\rightarrow$ fabric}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --- code --------------------------------------------------------------------
+\begin{frame}[fragile]{set the shape once}
+\begin{lstlisting}
+# the model is the contract
+model:  device
+source: netbox
+fields:
+  name: { from: name }
+  role: { from: device_role.slug }
+  site: { from: site.slug }
+apply:  infrahub   # write it back out
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SECTION 2 — pitch patterns
+% ============================================================================
+\section{traction}
+
+% --- big number + stat row ---------------------------------------------------
+\begin{frame}{}
+  \vskip0.06\paperheight
+  {\color{cwFaint}\small traction $\cdot$ since 2024}\par\vskip10pt
+  \cwstat{120+}{production fabrics now reconciled through alembic}
+  \vskip0.06\paperheight
+  {\color{cwRule}\hrule height0.6pt}\vskip14pt
+  \cwstatrow{3.2M}{devices reconciled}{9}{dcim / ipam systems}{0}{surprise writes to date}
+\end{frame}
+
+% --- comparison table --------------------------------------------------------
+\begin{frame}{by hand vs with alembic}
+  \vskip4pt
+  \renewcommand{\arraystretch}{1.55}%
+  \arrayrulecolor{cwRule}\setlength{\arrayrulewidth}{0.6pt}%
+  \noindent\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.27\textwidth}
+                              >{\raggedright\arraybackslash}p{0.29\textwidth}
+                              >{\columncolor{cwPanel}\raggedright\arraybackslash}p{0.29\textwidth}@{}}
+    & {\color{cwMuted}by hand} & {\color{cwInk}\bfseries with alembic}\\
+    \hline
+    {\color{cwFaint}source of truth} & \prose{\color{cwMuted}scattered across systems} & \prose{\color{cwInk}one model, declared once}\\
+    \hline
+    {\color{cwFaint}when it drifts}  & \prose{\color{cwMuted}found in an outage}       & \prose{\color{cwInk}caught before apply}\\
+    \hline
+    {\color{cwFaint}rollout}         & \prose{\color{cwMuted}ssh and hope}             & \prose{\color{cwInk}same run, every time}\\
+  \end{tabular}
+\end{frame}
+
+% --- timeline / roadmap ------------------------------------------------------
+\begin{frame}{the next four quarters}
+  \vskip0.04\paperheight
+  \cwtimeline{9.6}{
+    \cwmile{0}{now $\cdot$ q2 26}{open core stabilises}{adapters for the main dcim/ipam systems.}{cwInk}
+    \cwmile{3.2}{q3 26}{connectors GA}{the commercial layer onto the fabric.}{cwGround}
+    \cwmile{6.4}{q4 26}{self-serve maps}{build a mapping without us in the room.}{cwGround}
+    \cwmile{9.6}{q1 27}{multi-fabric}{one model driving more than one fabric.}{cwGround}
+  }
+\end{frame}
+
+% --- customer : problem / solution -------------------------------------------
+\begin{frame}{from inventory to fabric in a week}
+  \begin{columns}[T]
+    \begin{column}{0.36\textwidth}
+      \cwpanel{\vskip16pt\centering{\color{cwFaint}\sffamily\small customer logo}\vskip16pt}\\[10pt]
+      {\bfseries\color{cwInk}regional carrier}\\[4pt]
+      {\prose\small\color{cwFaint}40 sites $\cdot$ 12k devices $\cdot$ 3 vendors}
+    \end{column}
+    \begin{column}{0.56\textwidth}
+      \begin{block}{the problem}
+        inventory and fabric drifted; every change was a manual, risky push.
+      \end{block}
+      \begin{alertblock}{what changed}
+        one model, one reviewable plan, the same run every time.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --- bar chart ---------------------------------------------------------------
+\begin{frame}{manual writes per release}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[cw bar,
+      symbolic x coords={v1,v2,v3,v4,v5,v6}, xtick=data,
+      xticklabels={v1,v2,v3,v4,v5,{\textcolor{cwTeal}{v6}}}]
+      \addplot[draw=none, fill=cwFaint!35!cwGround, bar shift=0pt] coordinates {(v1,42)(v2,36)(v3,29)(v4,21)(v5,12)};
+      \addplot[draw=none, fill=cwTeal, bar shift=0pt, nodes near coords style={color=cwTeal}] coordinates {(v6,3)};
+    \end{axis}
+  \end{tikzpicture}\\[4pt]
+  \prose{\small\color{cwFaint}since adopting alembic, manual writes fall to near zero.}
+\end{frame}
+
+% --- social proof : logo wall ------------------------------------------------
+\begin{frame}{where it runs today}
+  \vskip0.03\paperheight
+  \centering
+  \cwlogocell{logo}\hfill\cwlogocell{logo}\hfill\cwlogocell{logo}\hfill\cwlogocell{logo}\\[8pt]
+  \cwlogocell{logo}\hfill\cwlogocell{logo}\hfill\cwlogocell{logo}\hfill\cwlogocell{logo}\\[12pt]
+  \raggedright\prose{\small\color{cwFaint}carriers, hosters and enterprise network teams across the eu.}
+\end{frame}
+
+% ============================================================================
+% SECTION 3 — media system
+% ============================================================================
+\section{the media system}
+
+% --- screenshot : framed, aspect-fit -----------------------------------------
+\begin{frame}{framed, fit, never text on top}
+  \centering
+  \cwshot{alembic --- plan view}{\vskip40pt\centering product screenshot\vskip40pt}\\[8pt]
+  \raggedright\prose{\small\color{cwFaint}aspect-fit on the ground colour; hairline frame, one per slide.}
+\end{frame}
+
+% --- diagram : three-node flow -----------------------------------------------
+\begin{frame}{hairline edges, bordered nodes}
+  \vskip0.05\paperheight
+  \cwflow{netbox}{alembic}{the flow between}{the fabric}\\[14pt]
+  \prose{\small\color{cwFaint}alembic is the connections, not another box to stand up.}
+\end{frame}
+
+% --- line / area chart (two series) ------------------------------------------
+\begin{frame}{reconciled devices, monthly}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[cw line,
+      xtick={1,3,5,7,9,11,12},
+      xticklabels={jan,mar,may,jul,sep,nov,{\textcolor{cwInk}{\bfseries now}}},
+      xmin=1, xmax=12, ymin=0]
+      \addplot[cwTeal, line width=1.4pt, mark=none, fill=cwTeal, fill opacity=0.15]
+        coordinates {(1,12)(3,20)(5,18)(7,42)(9,58)(11,80)(12,92)} \closedcycle;
+      \addlegendentry{reconciled}
+      \addplot[cwMagenta, line width=1.4pt, mark=none, fill=cwMagenta, fill opacity=0.12]
+        coordinates {(1,4)(3,8)(5,12)(7,12)(9,20)(11,26)(12,30)} \closedcycle;
+      \addlegendentry{still drifting}
+      \addplot[forget plot, only marks, mark=*, mark size=2.4pt,
+        mark options={fill=cwTeal, draw=cwTeal}] coordinates {(12,92)};
+      \addplot[forget plot, only marks, mark=*, mark size=2.4pt,
+        mark options={fill=cwMagenta, draw=cwMagenta}] coordinates {(12,30)};
+    \end{axis}
+  \end{tikzpicture}\\[4pt]
+  \prose{\small\color{cwFaint}two series in the contrast palette; the teal dot marks the latest figure.}
+\end{frame}
+
+% --- photo : full-bleed ------------------------------------------------------
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+  \cwphoto{team / event photo $\cdot$ duotone toward \#0a0a0a}%
+          {the lab $\cdot$ berlin}%
+          {full-bleed, gradient toward the ground; caption in mono.}
+\end{frame}}
+
+% --- rates table -------------------------------------------------------------
+\begin{frame}{rates, at a glance}
+  \vskip2pt
+  \renewcommand{\arraystretch}{1.28}%
+  \arrayrulecolor{cwRule}\setlength{\arrayrulewidth}{0.6pt}%
+  \noindent\begin{tabular}{@{}>{\color{cwBody}}p{0.6\textwidth}
+                              >{\raggedleft\arraybackslash\bfseries\color{cwInk}}p{0.28\textwidth}@{}}
+    {\color{cwFaint}engagement} & {\color{cwFaint}\mdseries rate}\\
+    \hline
+    consulting          & €1,400 / day\\
+    \hline
+    oss work            & €1,200 / day\\
+    \hline
+    talk $\cdot$ 45--60m & €1,900--2,400\\
+    \hline
+    workshop $\cdot$ 2--4h & €2,500--5,000\\
+    \hline
+    remote              & $-20\%$\\
+  \end{tabular}
+\end{frame}
+
+% --- closing : dominant logo on the right ------------------------------------
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+  \cwlogoright[cwInk]{0.5\paperheight}%
+  \vskip0.18\paperheight
+  \begin{minipage}{0.6\textwidth}
+    {\usebeamerfont{title}\color{cwInk}thank you.}\par\vskip16pt
+    \prose{\large\color{cwMuted}alembic is open source. the connectors and the help are how we make a living.}
+    \vskip0.1\paperheight
+    \colorbox{cwChip}{\color{cwChipText}\bfseries\ book a call\ }\\[10pt]
+    {\color{cwRule}\fbox{\color{cwBody}\bfseries\ contact@cyberwitchery.com\ }}
+  \end{minipage}
+\end{frame}}
+
+\end{document}

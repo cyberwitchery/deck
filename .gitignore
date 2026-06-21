@@ -1,0 +1,18 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.xdv
+missfont.log
+
+# generated light driver + rendered outputs
+main-light.tex
+main-light.pdf
+main.pdf
