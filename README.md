@@ -16,7 +16,21 @@ make cleanall   # drop artifacts and pdfs
 `xelatex main.tex` twice. lualatex works; pdflatex falls back to inconsolata for
 the mono face.
 
+## install
+
+drop the theme on your tex path so any deck can use it without a local copy:
+
+```sh
+make install     # copy to TEXMFHOME (~/Library/texmf/tex/latex/cyberwitchery)
+make uninstall   # remove it
+```
+
+no `texhash` needed. reinstall after editing the `.sty`, or symlink it for dev:
+`ln -s "$PWD/beamerthemeCyberwitchery.sty" "$(kpsewhich -var-value TEXMFHOME)/tex/latex/cyberwitchery/"`.
+
 ## use in your own deck
+
+with the theme installed (or `beamerthemeCyberwitchery.sty` sitting next to your `.tex`):
 
 ```latex
 \documentclass[aspectratio=169,11pt]{beamer}
