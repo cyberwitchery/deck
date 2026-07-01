@@ -52,7 +52,7 @@ neither font is required (mono falls back to inconsolata, prose renders upright)
 ## hooks
 
 - `\usetheme[light]{Cyberwitchery}` / `[dark]`: palette
-- `\renewcommand{\cwfootleft}{...}`: left footline label (default `cyber witchery`).
+- `\renewcommand{\cwfootleft}{...}`: left footline label (default `cyberwitchery`).
   the centre is `\insertshorttitle`; set `\title[short]{...}` to control it
 - `\renewcommand{\cwkicker}{...}`: small line above the title-page title
 - `\prose{...}`: switch a run to the hanken face

@@ -87,11 +87,21 @@
       UprightFont=*Regular,BoldFont=*Bold,Numbers=Monospaced]%
     \setmonofont{JetBrainsMono-}[Path=\cw@fontdir,Extension=.ttf,
       UprightFont=*Regular,BoldFont=*Bold]%
+    \def\cw@hbold{[\cw@fontdir JetBrainsMono-Bold.ttf]}%
   }{%
     \setsansfont{JetBrains Mono}[Numbers=Monospaced]%
     \setmonofont{JetBrains Mono}%
+    \def\cw@hbold{JetBrains Mono Bold}%
   }
-  \newfontfamily\cwhanken{Hanken Grotesk}
+  % Prose face: Hanken, x-height-matched to the mono so it sits with it rather
+  % than towering over it, with bold routed to JetBrains Mono Bold (Hanken's
+  % variable-font bold isn't resolved by fontspec here, and mono bold reads as
+  % the theme's emphasis anyway).
+  \newfontfamily\cwhanken{Hanken Grotesk}[Scale=MatchLowercase,BoldFont={\cw@hbold}]
+  % Inline code (\texttt) inside prose: a down-scaled mono so it sits with the
+  % body rather than looming over it. Display mono (\ttfamily, listings) is untouched.
+  \newfontfamily\cwinlinemono{JetBrains Mono}[Scale=0.86]
+  \renewcommand{\texttt}[1]{{\cwinlinemono #1}}
   \renewcommand{\familydefault}{\sfdefault}
 \fi
 \newcommand{\prose}[1]{{\cwhanken #1}}
@@ -155,7 +165,7 @@
 % ----------------------------------------------------------------------------
 % Footline  :  left  |  running title  |  NN / total
 % ----------------------------------------------------------------------------
-\newcommand{\cwfootleft}{cyber witchery}
+\newcommand{\cwfootleft}{cyberwitchery}
 \setbeamertemplate{footline}{%
   \hbox{%
     \begin{beamercolorbox}[wd=\paperwidth,sep=0pt]{footline}%
@@ -212,7 +222,7 @@
 % ----------------------------------------------------------------------------
 % Title page
 % ----------------------------------------------------------------------------
-\newcommand{\cwkicker}{a cyber witchery talk}
+\newcommand{\cwkicker}{a cyberwitchery talk}
 \setbeamertemplate{title page}{%
   \vskip0.12\paperheight%
   {\usebeamerfont{cwkicker}\color{cwFaint}\cwkicker\par}%
@@ -273,7 +283,9 @@
   \hbox{%
     {\fontsize{84}{84}\selectfont\bfseries\color{cwInk}#1}%
     \hskip20pt%
-    \vtop{\hsize0.32\textwidth\cwhanken\color{cwMuted}\large #2}%
+    % \vbox aligns the label's last baseline to the number's, so their floors
+    % sit level instead of the label hanging from the top.
+    \vbox{\hsize0.32\textwidth\cwhanken\color{cwMuted}\large #2}%
   }%
 }
 
